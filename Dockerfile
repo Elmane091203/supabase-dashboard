@@ -15,6 +15,14 @@ RUN pnpm install --frozen-lockfile
 # Copy application source
 COPY . .
 
+# Accept build arguments for environment variables
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+# Set as environment variables for build
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+
 # Build Next.js application
 RUN pnpm build
 
@@ -51,6 +59,10 @@ EXPOSE 3000
 # Set environment variables
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Environment variables for runtime - will be injected by Dokploy
+# These are passed at runtime, not build time
+# ARG values are not available here, so Dokploy will inject them
 
 # Start the app
 CMD ["pnpm", "start"]
