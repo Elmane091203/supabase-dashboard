@@ -1,0 +1,17 @@
+.next
+node_modules
+.git
+.gitignore
+README.md
+.env
+.env.local
+.env.*.local
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+.DS_Store
+.vscode
+.idea
+coverage
+dist
+.turbo
