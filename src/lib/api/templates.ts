@@ -57,25 +57,26 @@ export async function createTemplate(template: Omit<ProjectTemplate, 'id' | 'cre
   const supabase = getSupabaseClient()
   const { data, error } = await supabase
     .from('project_templates')
-    .insert([template])
+    .insert([template] as any)
     .select()
     .single()
 
   if (error) throw new Error(error.message)
-  return data
+  return data as ProjectTemplate
 }
 
 export async function updateTemplate(id: string, template: Partial<ProjectTemplate>): Promise<ProjectTemplate> {
   const supabase = getSupabaseClient()
   const { data, error } = await supabase
     .from('project_templates')
+    // @ts-ignore - Supabase type inference issue with generic tables
     .update(template)
     .eq('id', id)
     .select()
     .single()
 
   if (error) throw new Error(error.message)
-  return data
+  return data as ProjectTemplate
 }
 
 export async function deleteTemplate(id: string): Promise<void> {

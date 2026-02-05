@@ -92,25 +92,25 @@ export async function POST(request: NextRequest) {
     })
 
     const { data: functionResult, error: functionError } = await adminSupabase.rpc(
-      'provision_new_project',
+      'provision_new_project' as any,
       {
         p_project_id: validatedData.id,
         p_project_name: validatedData.name,
         p_template_id: validatedData.template_id,
         p_owner_id: user.id,
-      }
+      } as any
     )
 
     console.log('[POST /api/projects] Function result:', { functionResult, functionError })
 
-    if (functionError || !functionResult || !functionResult[0]?.success) {
+    if (functionError || !functionResult || !(functionResult as any)[0]?.success) {
       console.error('[POST /api/projects] Provisioning failed:', {
         error: functionError,
         result: functionResult,
       })
       return NextResponse.json(
         {
-          error: functionError?.message || functionResult?.[0]?.message || 'Failed to provision project'
+          error: functionError?.message || (functionResult as any)?.[0]?.message || 'Failed to provision project'
         },
         { status: 400 }
       )
@@ -137,9 +137,9 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('[POST /api/projects] Validation error:', error.errors)
+      console.error('[POST /api/projects] Validation error:', (error as z.ZodError).issues)
       return NextResponse.json(
-        { error: 'Invalid input', details: error.errors },
+        { error: 'Invalid input', details: (error as z.ZodError).issues },
         { status: 400 }
       )
     }

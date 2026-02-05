@@ -202,7 +202,7 @@ export function MembersList({
                         onValueChange={(value) =>
                           onUpdateRole(member.user_id, value as MemberRole)
                         }
-                        disabled={isUpdatingRole || member.role === 'owner'}
+                        disabled={isUpdatingRole || (member.role as any) === 'owner'}
                       >
                         <SelectTrigger className="h-8 w-24 bg-slate-800 border-slate-600 text-xs">
                           <SelectValue />

@@ -8,14 +8,16 @@
 import {
   useQuery,
   useMutation,
+  useQueryClient,
   UseQueryResult,
   UseMutationResult,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import type { ProjectCredentials } from '@/types/credentials'
 
 export function useProjectCredentials(
   projectId: string
-): UseQueryResult<ProjectCredentials[]> {
+): UseQueryResult<any> {
   return useQuery({
     queryKey: ['credentials', projectId],
     queryFn: async () => {
@@ -24,19 +26,19 @@ export function useProjectCredentials(
         throw new Error('Failed to fetch credentials')
       }
       const data = await response.json()
-      return data.credentials || []
+      return data.credentials || null
     },
     enabled: !!projectId,
   })
 }
 
-export function useRegenerateCredential(): UseMutationResult<
-  ProjectCredentials,
-  Error,
-  { projectId: string; credentialType: string }
-> {
+export function useRegenerateCredential(
+  projectId: string
+): UseMutationResult<ProjectCredentials, Error, string> {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: async ({ projectId, credentialType }) => {
+    mutationFn: async (credentialType: string) => {
       const response = await fetch(
         `/api/projects/${projectId}/credentials/regenerate`,
         {
@@ -46,10 +48,18 @@ export function useRegenerateCredential(): UseMutationResult<
         }
       )
       if (!response.ok) {
-        throw new Error('Failed to regenerate credential')
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to regenerate credential')
       }
       const data = await response.json()
-      return data.credential
+      return data.new_credential
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['credentials', projectId] })
+      toast.success('Credential regenerated successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 }

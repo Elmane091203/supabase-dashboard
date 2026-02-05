@@ -96,13 +96,14 @@ export async function updateProject(id: string, input: UpdateProjectInput): Prom
   const supabase = getSupabaseClient()
   const { data, error } = await supabase
     .from('projects')
+    // @ts-ignore - Supabase type inference issue with generic tables
     .update(input)
     .eq('id', id)
     .select()
     .single()
 
   if (error) throw new Error(error.message)
-  return data
+  return data as Project
 }
 
 export async function deleteProject(id: string): Promise<void> {

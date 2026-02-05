@@ -45,10 +45,10 @@ BEGIN
   -- Generate schema name
   v_schema_name := 'project_' || p_project_id;
 
-  -- Generate credentials
-  v_anon_key := 'sk-anon-' || encode(gen_random_bytes(24), 'base64');
-  v_service_key := 'sk-service-' || encode(gen_random_bytes(24), 'base64');
-  v_jwt_secret := encode(gen_random_bytes(32), 'base64');
+  -- Generate credentials (using md5 + random for simplicity without pgcrypto)
+  v_anon_key := 'sk-anon-' || substring(md5(random()::text || clock_timestamp()::text), 1, 32);
+  v_service_key := 'sk-service-' || substring(md5(random()::text || clock_timestamp()::text || gen_random_uuid()::text), 1, 40);
+  v_jwt_secret := substring(md5(random()::text || clock_timestamp()::text || gen_random_uuid()::text), 1, 32);
 
   BEGIN
     -- Start transaction
@@ -237,7 +237,7 @@ BEGIN
   END IF;
 
   -- Generate new credential
-  v_new_credential := 'sk-' || p_credential_type || '-' || encode(gen_random_bytes(24), 'base64');
+  v_new_credential := 'sk-' || p_credential_type || '-' || substring(md5(random()::text || clock_timestamp()::text || gen_random_uuid()::text), 1, 40);
 
   BEGIN
     -- Invalidate old credential

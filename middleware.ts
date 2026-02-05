@@ -9,7 +9,7 @@ import { createSupabaseMiddlewareClient } from './src/lib/supabase/middleware'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Allow public routes (login, register)
+  // Allow public routes (login, register, root)
   const publicRoutes = ['/', '/login', '/register']
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next()
@@ -34,34 +34,25 @@ export async function middleware(request: NextRequest) {
     // Check if user is authenticated
     const isAuthenticated = !!session && !error
 
-    // Debug log
-    console.log(`[Middleware] ${pathname} - Authenticated: ${isAuthenticated}`)
-
-    // Auth routes (/login, /register) - redirect to projects if already authenticated
-    if (pathname === '/login' || pathname === '/register') {
-      if (isAuthenticated) {
-        console.log(`[Middleware] Redirecting ${pathname} → /projects (already authenticated)`)
-        return NextResponse.redirect(new URL('/projects', request.url))
-      }
-      return response
-    }
+    console.log(`[Middleware] ${pathname} - Session: ${session ? 'YES' : 'NO'} - Error: ${error ? error.message : 'NONE'}`)
 
     // Protected routes - redirect to login if not authenticated
     const protectedRoutes = ['/projects', '/templates', '/settings']
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+    const isProtectedRoute = protectedRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
 
     if (isProtectedRoute) {
       if (!isAuthenticated) {
-        console.log(`[Middleware] Redirecting ${pathname} → /login (not authenticated)`)
+        console.log(`[Middleware] ❌ NOT AUTHENTICATED - Redirecting ${pathname} → /login`)
         return NextResponse.redirect(new URL('/login', request.url))
       }
+      console.log(`[Middleware] ✅ AUTHENTICATED - Allowing ${pathname}`)
       return response
     }
 
     // API routes - must be authenticated
     if (pathname.startsWith('/api/')) {
       if (!isAuthenticated) {
-        console.log(`[Middleware] Blocking API ${pathname} (not authenticated)`)
+        console.log(`[Middleware] ❌ API REQUEST NOT AUTHENTICATED - Blocking ${pathname}`)
         return NextResponse.json(
           { error: 'Unauthorized' },
           { status: 401 }
@@ -70,19 +61,9 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
-    // Root route - redirect based on auth status
-    if (pathname === '/') {
-      if (isAuthenticated) {
-        console.log(`[Middleware] Redirecting / → /projects (authenticated)`)
-        return NextResponse.redirect(new URL('/projects', request.url))
-      }
-      console.log(`[Middleware] Redirecting / → /login (not authenticated)`)
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-
     return response
   } catch (error) {
-    console.error('[Middleware] Error:', error)
+    console.error('[Middleware] ❌ ERROR:', error)
     // On error, redirect to login to be safe
     return NextResponse.redirect(new URL('/login', request.url))
   }
@@ -90,14 +71,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (auth endpoints)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+    // Match all routes except static files and api/auth
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 }

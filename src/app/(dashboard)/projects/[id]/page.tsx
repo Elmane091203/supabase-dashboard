@@ -16,7 +16,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
-import { useProjectCredentials } from '@/hooks/use-credentials'
+import { useProjectCredentials, useRegenerateCredential } from '@/hooks/use-credentials'
 import { useProjectMembers, useAddMember, useRemoveMember, useUpdateMemberRole } from '@/hooks/use-members'
 import { CredentialsDisplay } from '@/components/credentials/credentials-display'
 import { MembersList } from '@/components/members/members-list'
@@ -29,6 +29,7 @@ export default function ProjectDetailsPage() {
 
   // Credentials
   const { data: credentials, isLoading: credentialsLoading } = useProjectCredentials(projectId)
+  const { mutate: regenerateCredential, isPending: isRegenerating } = useRegenerateCredential(projectId)
 
   // Members
   const { data: members, isLoading: membersLoading } = useProjectMembers(projectId)
@@ -169,9 +170,9 @@ export default function ProjectDetailsPage() {
             projectId={projectId}
             credentials={credentials}
             isLoading={credentialsLoading}
+            isRegenerating={isRegenerating}
             onRegenerateClick={(type) => {
-              // TODO: Implement credential regeneration
-              console.log('Regenerate', type)
+              regenerateCredential(type)
             }}
           />
         </TabsContent>
@@ -231,7 +232,7 @@ export default function ProjectDetailsPage() {
         <TabsContent value="settings" className="space-y-4">
           <ProjectActions
             project={project}
-            onDelete={() => deleteProject(projectId)}
+            onDelete={async () => deleteProject(projectId)}
             isDeleting={isDeleting}
           />
         </TabsContent>

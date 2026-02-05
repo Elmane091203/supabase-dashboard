@@ -25,6 +25,7 @@ interface CredentialsDisplayProps {
   } | null
   isLoading: boolean
   onRegenerateClick: (type: string) => void
+  isRegenerating?: boolean
 }
 
 export function CredentialsDisplay({
@@ -32,8 +33,10 @@ export function CredentialsDisplay({
   credentials,
   isLoading,
   onRegenerateClick,
+  isRegenerating,
 }: CredentialsDisplayProps) {
   const [showSecrets, setShowSecrets] = useState(false)
+  const [regenerateType, setRegenerateType] = useState<string | null>(null)
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text)
@@ -78,11 +81,16 @@ export function CredentialsDisplay({
           </button>
           {type !== 'anon_key' && (
             <button
-              onClick={() => onRegenerateClick(type)}
-              className="text-slate-400 hover:text-yellow-400 transition-colors"
+              onClick={() => {
+                if (confirm(`Regenerate ${label}? The old key will stop working immediately.`)) {
+                  onRegenerateClick(type)
+                }
+              }}
+              disabled={isRegenerating}
+              className="text-slate-400 hover:text-yellow-400 transition-colors disabled:opacity-50"
               title="Regenerate key"
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
             </button>
           )}
         </div>

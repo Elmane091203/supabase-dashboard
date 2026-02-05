@@ -1,15 +1,6 @@
-/**
- * Regenerate Credentials API Route
- * POST /api/projects/[id]/credentials/regenerate - Regenerate a credential
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
-
-interface RouteContext {
-  params: { id: string }
-}
 
 const regenerateSchema = z.object({
   credential_type: z.enum(['anon_key', 'service_key', 'jwt_secret']),
@@ -17,74 +8,51 @@ const regenerateSchema = z.object({
 
 export async function POST(
   request: NextRequest,
-  context: RouteContext
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params
+    const { id } = await context.params
     const supabase = await createSupabaseServerClient()
 
-    // Get current user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser()
-
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if user is project owner
-    const { data: member } = await supabase
-      .from('project_members')
-      .select('role')
-      .eq('project_id', id)
-      .eq('user_id', user.id)
+    const { data: project } = await supabase
+      .from('projects')
+      .select('owner_id')
+      .eq('id', id)
       .single()
 
-    if (!member || member.role !== 'owner') {
+    if (!project || (project as any).owner_id !== user.id) {
       return NextResponse.json(
-        { error: 'Only project owner can regenerate credentials' },
+        { error: 'Only project owner can regenerate' },
         { status: 403 }
       )
     }
 
-    // Parse and validate request body
     const body = await request.json()
     const { credential_type } = regenerateSchema.parse(body)
 
-    // Call PostgreSQL function to regenerate credentials
-    const { data, error } = await supabase.rpc('regenerate_credentials', {
+    const { data, error } = await supabase.rpc('regenerate_credentials' as any, {
       p_project_id: id,
       p_credential_type: credential_type,
-    })
+    } as any)
 
     if (error) {
-      console.error('Regenerate credentials error:', error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json({
-      success: data[0].success,
-      new_credential: data[0].new_credential,
+      success: (data as any)?.[0]?.success,
+      new_credential: (data as any)?.[0]?.new_credential,
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
-
-    console.error('POST /api/projects/[id]/credentials/regenerate error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Regenerate error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
