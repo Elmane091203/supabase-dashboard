@@ -82,7 +82,7 @@ export function RegisterForm() {
                     placeholder="you@example.com"
                     type="email"
                     disabled={isLoading}
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                     {...field}
                   />
                 </FormControl>
@@ -102,7 +102,7 @@ export function RegisterForm() {
                     placeholder="••••••••"
                     type="password"
                     disabled={isLoading}
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                     {...field}
                   />
                 </FormControl>
@@ -122,7 +122,7 @@ export function RegisterForm() {
                     placeholder="••••••••"
                     type="password"
                     disabled={isLoading}
-                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400"
+                    className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                     {...field}
                   />
                 </FormControl>
@@ -131,7 +131,7 @@ export function RegisterForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Creating account...' : 'Sign up'}
           </Button>
@@ -140,7 +140,7 @@ export function RegisterForm() {
 
       <div className="text-center text-sm text-slate-400">
         Already have an account?{' '}
-        <Link href="/login" className="text-blue-400 hover:text-blue-300">
+        <Link href="/login" className="text-primary-400 hover:text-primary-300 transition-colors duration-300">
           Sign in
         </Link>
       </div>

@@ -109,9 +109,7 @@ export default function TemplatesPage() {
                   href={`/projects/new?template=${template.id}`}
                   className="block mt-4"
                 >
-                  <Button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  >
+                  <Button className="w-full">
                     Use Template
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>

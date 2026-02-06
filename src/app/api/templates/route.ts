@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { DEFAULT_TEMPLATES } from '@/types/template'
 
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ templates })
   } catch (error) {
-    console.error('GET /api/templates error:', error)
+    logger.error('GET /api/templates error:', error)
     // Return default templates on error
     return NextResponse.json({ templates: DEFAULT_TEMPLATES })
   }

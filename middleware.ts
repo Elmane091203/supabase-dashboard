@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseMiddlewareClient } from './src/lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Create response for setting cookies
-  let response = NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
@@ -34,7 +35,7 @@ export async function middleware(request: NextRequest) {
     // Check if user is authenticated
     const isAuthenticated = !!session && !error
 
-    console.log(`[Middleware] ${pathname} - Session: ${session ? 'YES' : 'NO'} - Error: ${error ? error.message : 'NONE'}`)
+    logger.log(`[Middleware] ${pathname} - Session: ${session ? 'YES' : 'NO'} - Error: ${error ? error.message : 'NONE'}`)
 
     // Protected routes - redirect to login if not authenticated
     const protectedRoutes = ['/projects', '/templates', '/settings']
@@ -42,17 +43,17 @@ export async function middleware(request: NextRequest) {
 
     if (isProtectedRoute) {
       if (!isAuthenticated) {
-        console.log(`[Middleware] ❌ NOT AUTHENTICATED - Redirecting ${pathname} → /login`)
+        logger.log(`[Middleware] ❌ NOT AUTHENTICATED - Redirecting ${pathname} → /login`)
         return NextResponse.redirect(new URL('/login', request.url))
       }
-      console.log(`[Middleware] ✅ AUTHENTICATED - Allowing ${pathname}`)
+      logger.log(`[Middleware] ✅ AUTHENTICATED - Allowing ${pathname}`)
       return response
     }
 
     // API routes - must be authenticated
     if (pathname.startsWith('/api/')) {
       if (!isAuthenticated) {
-        console.log(`[Middleware] ❌ API REQUEST NOT AUTHENTICATED - Blocking ${pathname}`)
+        logger.log(`[Middleware] ❌ API REQUEST NOT AUTHENTICATED - Blocking ${pathname}`)
         return NextResponse.json(
           { error: 'Unauthorized' },
           { status: 401 }
@@ -63,7 +64,7 @@ export async function middleware(request: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('[Middleware] ❌ ERROR:', error)
+    logger.error('[Middleware] ❌ ERROR:', error)
     // On error, redirect to login to be safe
     return NextResponse.redirect(new URL('/login', request.url))
   }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient, createSupabaseAdminClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
@@ -27,7 +28,7 @@ export async function GET(
 
     return NextResponse.json({ members: members || [] })
   } catch (error) {
-    console.error('GET members error:', error)
+    logger.error('GET members error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -75,7 +76,7 @@ export async function POST(
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
-    console.error('POST members error:', error)
+    logger.error('POST members error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

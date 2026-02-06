@@ -10,10 +10,10 @@ import { Package } from 'lucide-react'
 
 export function EmptyProjectsState() {
   return (
-    <Card className="border-slate-700 bg-slate-800/50 border-dashed p-12 text-center">
-      <div className="flex justify-center mb-4">
-        <div className="rounded-full bg-slate-700/50 p-4">
-          <Package className="h-8 w-8 text-slate-400" />
+    <Card className="border-slate-700 bg-slate-800/50 border-dashed p-12 text-center transition-all duration-300 animate-fadeIn">
+      <div className="flex justify-center mb-4 animate-slideDown">
+        <div className="rounded-full bg-primary-500/20 p-4 transition-all duration-300">
+          <Package className="h-8 w-8 text-primary-400" />
         </div>
       </div>
 
@@ -26,7 +26,7 @@ export function EmptyProjectsState() {
       </p>
 
       <Link href="/projects/new">
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-primary-600 hover:bg-primary-700 transition-all duration-300 animate-slideUp">
           Create your first project
         </Button>
       </Link>

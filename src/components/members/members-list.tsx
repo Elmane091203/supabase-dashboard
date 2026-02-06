@@ -66,11 +66,11 @@ export function MembersList({
   const getRoleBadgeColor = (role: MemberRole) => {
     switch (role) {
       case 'owner':
-        return 'bg-purple-600'
+        return 'bg-primary-600'
       case 'admin':
-        return 'bg-blue-600'
+        return 'bg-primary-600'
       case 'member':
-        return 'bg-green-600'
+        return 'bg-success-600'
       case 'viewer':
         return 'bg-slate-600'
       default:
@@ -92,7 +92,7 @@ export function MembersList({
     <div className="space-y-4">
       {/* Add Member Form */}
       {showAddForm ? (
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-slate-800/50 border-slate-700 transition-all duration-300 animate-slideDown">
           <CardHeader>
             <CardTitle className="text-base">Add New Member</CardTitle>
           </CardHeader>
@@ -132,7 +132,7 @@ export function MembersList({
               <Button
                 onClick={handleAddMember}
                 disabled={isAddingMember || !newMemberEmail}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary-600 hover:bg-primary-700"
               >
                 {isAddingMember ? 'Adding...' : 'Add Member'}
               </Button>
@@ -150,7 +150,7 @@ export function MembersList({
       ) : (
         <Button
           onClick={() => setShowAddForm(true)}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-primary-600 hover:bg-primary-700"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Member
@@ -158,7 +158,7 @@ export function MembersList({
       )}
 
       {/* Members List */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-slate-800/50 border-slate-700 transition-all duration-300 animate-slideUp">
         <CardHeader>
           <CardTitle className="text-base">Team Members</CardTitle>
           <CardDescription>
@@ -176,7 +176,7 @@ export function MembersList({
               {members.map((member) => (
                 <div
                   key={member.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-700/50"
+                  className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-700/50 transition-all duration-300 hover:bg-slate-900/70 hover:border-slate-600"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-white truncate">
@@ -222,7 +222,7 @@ export function MembersList({
                         variant="ghost"
                         onClick={() => onRemoveMember(member.user_id)}
                         disabled={isRemovingMember}
-                        className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-950/20"
+                        className="h-8 w-8 p-0 text-danger-400 hover:text-danger-300 hover:bg-danger-950/20"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

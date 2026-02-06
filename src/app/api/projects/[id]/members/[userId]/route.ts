@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
@@ -40,7 +41,7 @@ export async function PATCH(
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
-    console.error('PATCH member error:', error)
+    logger.error('PATCH member error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -66,7 +67,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('DELETE member error:', error)
+    logger.error('DELETE member error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

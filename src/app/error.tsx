@@ -19,7 +19,7 @@ export default function Error({
     <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
       <Card className="w-full max-w-md bg-slate-800/50 border-slate-700">
         <div className="p-8 space-y-4 text-center">
-          <div className="rounded-full bg-red-500/10 w-12 h-12 flex items-center justify-center mx-auto">
+          <div className="rounded-full bg-danger-500/10 w-12 h-12 flex items-center justify-center mx-auto">
             <span className="text-2xl">⚠️</span>
           </div>
 
@@ -31,7 +31,7 @@ export default function Error({
           </div>
 
           <div className="space-y-2">
-            <Button onClick={reset} className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button onClick={reset} className="w-full">
               Try again
             </Button>
             <Button

@@ -37,7 +37,7 @@ export function ProjectFilters({
           placeholder="Search projects by name or ID..."
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+          className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
         />
       </div>
 
@@ -47,7 +47,6 @@ export function ProjectFilters({
           variant={statusFilter === null ? 'default' : 'outline'}
           size="sm"
           onClick={() => onStatusChange(null)}
-          className={statusFilter === null ? 'bg-blue-600 hover:bg-blue-700' : ''}
         >
           All
         </Button>
@@ -57,7 +56,6 @@ export function ProjectFilters({
             variant={statusFilter === status.value ? 'default' : 'outline'}
             size="sm"
             onClick={() => onStatusChange(status.value)}
-            className={statusFilter === status.value ? 'bg-blue-600 hover:bg-blue-700' : ''}
           >
             {status.label}
           </Button>

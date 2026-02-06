@@ -79,7 +79,7 @@ export function ProjectForm() {
   if (templatesLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
       </div>
     )
   }
@@ -98,7 +98,7 @@ export function ProjectForm() {
                 <Input
                   placeholder="My Awesome Project"
                   disabled={isPending}
-                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                   {...field}
                   onChange={(e) => {
                     field.onChange(e)
@@ -122,7 +122,7 @@ export function ProjectForm() {
                 <Input
                   placeholder="my-awesome-project"
                   disabled={isPending}
-                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 font-mono text-sm"
+                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 font-mono text-sm transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                   {...field}
                 />
               </FormControl>
@@ -145,7 +145,7 @@ export function ProjectForm() {
                 <Input
                   placeholder="A brief description of your project..."
                   disabled={isPending}
-                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+                  className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 transition-all duration-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50"
                   {...field}
                 />
               </FormControl>
@@ -166,8 +166,9 @@ export function ProjectForm() {
         {/* Submit Button */}
         <Button
           type="submit"
+          variant="primary"
           disabled={isPending}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 h-auto"
+          className="w-full font-medium py-2 h-auto"
         >
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {isPending ? 'Creating project...' : 'Create Project'}

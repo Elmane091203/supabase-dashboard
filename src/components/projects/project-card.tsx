@@ -18,11 +18,11 @@ interface ProjectCardProps {
 }
 
 const statusColors: Record<string, string> = {
-  active: 'bg-green-500/10 text-green-700 hover:bg-green-500/20',
-  pending: 'bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20',
-  provisioning: 'bg-blue-500/10 text-blue-700 hover:bg-blue-500/20',
-  suspended: 'bg-red-500/10 text-red-700 hover:bg-red-500/20',
-  deleted: 'bg-gray-500/10 text-gray-700 hover:bg-gray-500/20',
+  active: 'bg-success-500/10 text-success-600 hover:bg-success-500/20',
+  pending: 'bg-warning-500/10 text-warning-600 hover:bg-warning-500/20',
+  provisioning: 'bg-primary-500/10 text-primary-600 hover:bg-primary-500/20',
+  suspended: 'bg-danger-500/10 text-danger-600 hover:bg-danger-500/20',
+  deleted: 'bg-slate-500/10 text-slate-600 hover:bg-slate-500/20',
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
@@ -31,7 +31,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className="cursor-pointer transition-all hover:shadow-lg hover:border-blue-500/50 bg-slate-800/50 border-slate-700">
+      <Card className="cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-primary-500/50 bg-slate-800/50 border-slate-700 hover:bg-slate-800/80 animate-slideUp">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -72,22 +72,22 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {/* Features */}
           <div className="flex flex-wrap gap-1">
             {project.features.auth && (
-              <Badge variant="secondary" className="bg-slate-700/50 text-slate-200 text-xs">
+              <Badge variant="secondary" className="bg-primary-500/20 text-primary-300 text-xs transition-colors duration-300">
                 Auth
               </Badge>
             )}
             {project.features.storage && (
-              <Badge variant="secondary" className="bg-slate-700/50 text-slate-200 text-xs">
+              <Badge variant="secondary" className="bg-primary-500/20 text-primary-300 text-xs transition-colors duration-300">
                 Storage
               </Badge>
             )}
             {project.features.realtime && (
-              <Badge variant="secondary" className="bg-slate-700/50 text-slate-200 text-xs">
+              <Badge variant="secondary" className="bg-primary-500/20 text-primary-300 text-xs transition-colors duration-300">
                 Realtime
               </Badge>
             )}
             {project.features.functions && (
-              <Badge variant="secondary" className="bg-slate-700/50 text-slate-200 text-xs">
+              <Badge variant="secondary" className="bg-primary-500/20 text-primary-300 text-xs transition-colors duration-300">
                 Functions
               </Badge>
             )}

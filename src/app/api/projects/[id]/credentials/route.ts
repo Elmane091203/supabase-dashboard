@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export async function GET(
@@ -40,7 +41,7 @@ export async function GET(
 
     return NextResponse.json({ credentials: credentialsDisplay })
   } catch (error) {
-    console.error('GET credentials error:', error)
+    logger.error('GET credentials error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

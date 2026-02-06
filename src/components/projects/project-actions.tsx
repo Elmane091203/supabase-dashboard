@@ -67,7 +67,7 @@ export function ProjectActions({
     <div className="space-y-4">
       {/* Suspend/Activate */}
       {onSuspend && (
-        <Card className="bg-yellow-950/20 border-yellow-800/50">
+        <Card className="bg-warning-950/20 border-yellow-800/50">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2 text-yellow-600">
               <AlertCircle className="h-4 w-4" />
@@ -92,7 +92,7 @@ export function ProjectActions({
               className={
                 project.status === 'suspended'
                   ? 'border-green-700 text-green-400 hover:bg-green-950/20'
-                  : 'border-yellow-700 text-yellow-400 hover:bg-yellow-950/20'
+                  : 'border-yellow-700 text-warning-400 hover:bg-warning-950/20'
               }
             >
               {isSuspending
@@ -106,7 +106,7 @@ export function ProjectActions({
       )}
 
       {/* Delete Zone */}
-      <Card className="bg-red-950/20 border-red-800/50">
+      <Card className="bg-danger-950/20 border-danger-800/50">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2 text-red-600">
             <Trash2 className="h-4 w-4" />
@@ -117,18 +117,18 @@ export function ProjectActions({
         <CardContent className="space-y-4">
           {showDeleteConfirm ? (
             <>
-              <div className="rounded-lg bg-red-950/50 p-3 border border-red-800/50">
-                <p className="text-sm text-red-300/80 mb-3">
+              <div className="rounded-lg bg-danger-950/50 p-3 border border-danger-800/50">
+                <p className="text-sm text-danger-300/80 mb-3">
                   This will permanently delete <strong>{project.name}</strong> and all associated
                   data including:
                 </p>
-                <ul className="text-xs text-red-300/70 list-disc list-inside space-y-1 mb-3">
+                <ul className="text-xs text-danger-300/70 list-disc list-inside space-y-1 mb-3">
                   <li>PostgreSQL schema and all tables</li>
                   <li>API credentials and access keys</li>
                   <li>Project members and permissions</li>
                   <li>Audit logs and activity history</li>
                 </ul>
-                <p className="text-sm text-red-400 font-medium mb-3">
+                <p className="text-sm text-danger-400 font-medium mb-3">
                   Type <strong>{project.name}</strong> to confirm deletion:
                 </p>
               </div>
@@ -146,7 +146,7 @@ export function ProjectActions({
                 <Button
                   onClick={handleDelete}
                   disabled={isDeleting || deleteConfirmText !== project.name}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="bg-danger-600 hover:bg-danger-700 text-white"
                 >
                   {isDeleting ? 'Deleting...' : 'Delete Project'}
                 </Button>
@@ -165,13 +165,13 @@ export function ProjectActions({
             </>
           ) : (
             <>
-              <p className="text-sm text-red-300/80">
+              <p className="text-sm text-danger-300/80">
                 Once you delete a project, there is no going back. This action is permanent and will
                 delete all data associated with this project.
               </p>
               <Button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-danger-600 hover:bg-danger-700 text-white"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Project

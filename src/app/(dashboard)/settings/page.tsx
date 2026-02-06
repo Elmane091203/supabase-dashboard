@@ -47,7 +47,7 @@ export default function SettingsPage() {
 
               <div>
                 <p className="text-sm text-slate-400 mb-1">Status</p>
-                <Badge className="bg-green-600">Active</Badge>
+                <Badge className="bg-success-600">Active</Badge>
               </div>
             </>
           )}

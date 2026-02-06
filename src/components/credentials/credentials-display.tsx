@@ -68,13 +68,13 @@ export function CredentialsDisplay({
             </Badge>
           )}
         </div>
-        <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2">
+        <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2 transition-colors duration-300 hover:bg-slate-900/70">
           <code className="flex-1 text-xs text-slate-300 font-mono break-all">
             {displayValue}
           </code>
           <button
             onClick={() => copyToClipboard(credential.credential_value, label)}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors duration-300"
             title="Copy to clipboard"
           >
             <Copy className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function CredentialsDisplay({
                 }
               }}
               disabled={isRegenerating}
-              className="text-slate-400 hover:text-yellow-400 transition-colors disabled:opacity-50"
+              className="text-slate-400 hover:text-warning-400 transition-colors duration-300 disabled:opacity-50"
               title="Regenerate key"
             >
               <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
@@ -121,18 +121,18 @@ export function CredentialsDisplay({
   return (
     <div className="space-y-4">
       {/* API URL */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-slate-800/50 border-slate-700 transition-all duration-300 animate-slideUp">
         <CardHeader>
           <CardTitle className="text-base">API Endpoint</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2">
+          <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2 transition-colors duration-300 hover:bg-slate-900/70">
             <code className="flex-1 text-xs text-slate-300 font-mono break-all">
               {credentials.api_url}
             </code>
             <button
               onClick={() => copyToClipboard(credentials.api_url, 'API URL')}
-              className="text-slate-400 hover:text-white transition-colors"
+              className="text-slate-400 hover:text-white transition-colors duration-300"
             >
               <Copy className="h-4 w-4" />
             </button>
@@ -141,7 +141,7 @@ export function CredentialsDisplay({
       </Card>
 
       {/* Credentials */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-slate-800/50 border-slate-700 transition-all duration-300 animate-slideUp">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -150,7 +150,7 @@ export function CredentialsDisplay({
             </div>
             <button
               onClick={() => setShowSecrets(!showSecrets)}
-              className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors duration-300"
             >
               {showSecrets ? (
                 <>
@@ -192,7 +192,7 @@ export function CredentialsDisplay({
             <div className="border-t border-slate-700 pt-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-white">Database URL</label>
-                <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2">
+                <div className="flex items-center gap-2 bg-slate-900/50 rounded px-3 py-2 transition-colors duration-300 hover:bg-slate-900/70">
                   <code className="flex-1 text-xs text-slate-300 font-mono break-all">
                     {showSecrets ? credentials.database_url : '•'.repeat(40)}
                   </code>
@@ -200,7 +200,7 @@ export function CredentialsDisplay({
                     onClick={() =>
                       copyToClipboard(credentials.database_url || '', 'Database URL')
                     }
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-slate-400 hover:text-white transition-colors duration-300"
                   >
                     <Copy className="h-4 w-4" />
                   </button>
@@ -212,7 +212,7 @@ export function CredentialsDisplay({
       </Card>
 
       {/* Info Box */}
-      <div className="rounded-lg border border-blue-800/50 bg-blue-950/20 p-4 text-sm text-blue-300">
+      <div className="rounded-lg border border-primary-800/50 bg-primary-950/20 p-4 text-sm text-primary-300 transition-all duration-300">
         <p className="font-medium mb-2">🔒 Security Tips</p>
         <ul className="list-disc list-inside space-y-1 text-xs">
           <li>Never share your service key or JWT secret</li>

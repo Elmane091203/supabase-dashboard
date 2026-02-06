@@ -42,7 +42,7 @@ export default function ProjectDetailsPage() {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-800/50 bg-red-950/20 p-4 text-red-400">
+      <div className="rounded-lg border border-danger-800/50 bg-danger-950/20 p-4 text-danger-400">
         Error loading project: {error.message}
       </div>
     )
@@ -144,19 +144,19 @@ export default function ProjectDetailsPage() {
             <CardContent>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${project.features.auth ? 'bg-green-500' : 'bg-slate-600'}`} />
+                  <div className={`h-2 w-2 rounded-full ${project.features.auth ? 'bg-success-500' : 'bg-slate-600'}`} />
                   <span className="text-white">Authentication</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${project.features.storage ? 'bg-green-500' : 'bg-slate-600'}`} />
+                  <div className={`h-2 w-2 rounded-full ${project.features.storage ? 'bg-success-500' : 'bg-slate-600'}`} />
                   <span className="text-white">Storage</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${project.features.realtime ? 'bg-green-500' : 'bg-slate-600'}`} />
+                  <div className={`h-2 w-2 rounded-full ${project.features.realtime ? 'bg-success-500' : 'bg-slate-600'}`} />
                   <span className="text-white">Realtime</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`h-2 w-2 rounded-full ${project.features.functions ? 'bg-green-500' : 'bg-slate-600'}`} />
+                  <div className={`h-2 w-2 rounded-full ${project.features.functions ? 'bg-success-500' : 'bg-slate-600'}`} />
                   <span className="text-white">Functions</span>
                 </div>
               </div>

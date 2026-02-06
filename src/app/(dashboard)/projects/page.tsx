@@ -36,7 +36,7 @@ export default function ProjectsPage() {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-800/50 bg-red-950/20 p-4 text-red-400">
+      <div className="rounded-lg border border-danger-800/50 bg-danger-950/20 p-4 text-danger-400">
         Error loading projects: {error.message}
       </div>
     )
@@ -53,7 +53,7 @@ export default function ProjectsPage() {
           </p>
         </div>
         <Link href="/projects/new">
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button>
             <Plus className="mr-2 h-4 w-4" />
             New Project
           </Button>

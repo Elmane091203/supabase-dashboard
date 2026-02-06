@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
@@ -52,7 +53,7 @@ export async function POST(
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
-    console.error('Regenerate error:', error)
+    logger.error('Regenerate error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

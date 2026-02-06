@@ -6,6 +6,7 @@
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { DEFAULT_TEMPLATES } from '@/types/template'
 import type { ProjectTemplate } from '@/types/template'
+import { logger } from '@/lib/logger'
 
 export async function fetchTemplates(): Promise<ProjectTemplate[]> {
   try {
@@ -27,7 +28,7 @@ export async function fetchTemplates(): Promise<ProjectTemplate[]> {
     return data && data.length > 0 ? data : DEFAULT_TEMPLATES
   } catch (error) {
     // Fallback to hardcoded defaults
-    console.error('Error fetching templates:', error)
+    logger.error('Error fetching templates:', error)
     return DEFAULT_TEMPLATES
   }
 }
@@ -48,7 +49,7 @@ export async function fetchTemplateById(id: string): Promise<ProjectTemplate | n
     if (error && error.code !== 'PGRST116') throw error
     return data || null
   } catch (error) {
-    console.error('Error fetching template:', error)
+    logger.error('Error fetching template:', error)
     return null
   }
 }
@@ -70,7 +71,7 @@ export async function updateTemplate(id: string, template: Partial<ProjectTempla
   const { data, error } = await supabase
     .from('project_templates')
     // @ts-ignore - Supabase type inference issue with generic tables
-    .update(template)
+    .update(template as any)
     .eq('id', id)
     .select()
     .single()

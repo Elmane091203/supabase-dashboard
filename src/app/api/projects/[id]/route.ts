@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
@@ -49,7 +50,7 @@ export async function GET(
 
     return NextResponse.json({ project })
   } catch (error) {
-    console.error('GET /api/projects/[id] error:', error)
+    logger.error('GET /api/projects/[id] error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -107,7 +108,7 @@ export async function PATCH(
       )
     }
 
-    console.error('PATCH /api/projects/[id] error:', error)
+    logger.error('PATCH /api/projects/[id] error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -153,7 +154,7 @@ export async function DELETE(
     } as any)
 
     if (error) {
-      console.error('Delete project error:', error)
+      logger.error('Delete project error:', error)
       return NextResponse.json(
         { error: error.message || 'Failed to delete project' },
         { status: 500 }
@@ -162,7 +163,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('DELETE /api/projects/[id] error:', error)
+    logger.error('DELETE /api/projects/[id] error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
