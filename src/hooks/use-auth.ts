@@ -6,10 +6,13 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/stores/auth-store'
 import { getSupabaseClient } from '@/lib/supabase/client'
+import { logger } from '@/lib/logger'
 
 export function useAuth() {
+  const queryClient = useQueryClient()
   const { user, session, loading, error, setUser, setSession, setLoading, setError, logout } = useAuthStore()
   const [isInitialized, setIsInitialized] = useState(false)
 
@@ -20,7 +23,7 @@ export function useAuth() {
       try {
         const supabase = getSupabaseClient()
 
-        console.log('[Auth] Initializing authentication...')
+        logger.log('[Auth] Initializing authentication...')
 
         // Get current session from server/cookies
         const {
@@ -29,21 +32,21 @@ export function useAuth() {
         } = await supabase.auth.getSession()
 
         if (sessionError) {
-          console.warn('[Auth] Session error:', sessionError.message)
+          logger.warn('[Auth] Session error:', sessionError.message)
           setError(sessionError.message)
         } else if (currentSession) {
-          console.log('[Auth] Session found:', currentSession.user.email)
+          logger.log('[Auth] Session found:', currentSession.user.email)
           setSession(currentSession)
           setUser(currentSession.user)
         } else {
-          console.log('[Auth] No session found')
+          logger.log('[Auth] No session found')
         }
 
         // Set up auth state listener
         const {
           data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-          console.log('[Auth] Auth state changed:', event)
+          logger.log('[Auth] Auth state changed:', event)
 
           if (newSession) {
             setSession(newSession)
@@ -58,12 +61,12 @@ export function useAuth() {
         setLoading(false)
 
         return () => {
-          console.log('[Auth] Unsubscribing from auth state')
+          logger.log('[Auth] Unsubscribing from auth state')
           subscription?.unsubscribe()
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to initialize auth'
-        console.error('[Auth] Initialization error:', message)
+        logger.error('[Auth] Initialization error:', message)
         setError(message)
         setIsInitialized(true)
         setLoading(false)
@@ -104,7 +107,7 @@ export function useAuth() {
 
         const { data: verifyData } = await supabase.auth.getSession()
         if (!verifyData.session) {
-          console.warn('Warning: Session not persisted to cookies')
+          logger.warn('Warning: Session not persisted to cookies')
         }
 
         return { success: true }
@@ -168,7 +171,7 @@ export function useAuth() {
     try {
       const supabase = getSupabaseClient()
 
-      console.log('[Auth] Signing out...')
+      logger.log('[Auth] Signing out...')
 
       // Sign out from Supabase
       const { error } = await supabase.auth.signOut({
@@ -177,7 +180,7 @@ export function useAuth() {
 
       if (error && error.status !== 401) {
         // Ignore 401 errors (already logged out)
-        console.error('[Auth] Sign out error:', error.message)
+        logger.error('[Auth] Sign out error:', error.message)
         setError(error.message)
         return { success: false, error: error.message }
       }
@@ -190,18 +193,22 @@ export function useAuth() {
         localStorage.removeItem('auth-store')
       }
 
-      console.log('[Auth] Sign out successful')
+      // ✨ CRITICAL FIX: Invalidate ALL React Query caches to prevent data leak
+      queryClient.clear()
+      logger.log('[Auth] Cleared React Query cache')
+
+      logger.log('[Auth] Sign out successful')
 
       return { success: true }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Sign out failed'
-      console.error('[Auth] Sign out exception:', message)
+      logger.error('[Auth] Sign out exception:', message)
       setError(message)
       return { success: false, error: message }
     } finally {
       setLoading(false)
     }
-  }, [logout, setLoading, setError])
+  }, [logout, setLoading, setError, queryClient])
 
   return {
     user,
