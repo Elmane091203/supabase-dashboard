@@ -5,16 +5,17 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 import type { Database } from './database.types'
+import { logger } from '@/lib/logger'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Debug: Log environment variables on client initialization
-if (typeof window !== 'undefined') {
-  console.log('[Supabase Client] Initializing with URL:', supabaseUrl)
+// Debug: Log environment variables on client initialization (dev only)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  logger.log('[Supabase Client] Initializing with URL:', supabaseUrl)
 
   if (supabaseUrl?.includes('your-project.supabase.co')) {
-    console.error(
+    logger.error(
       '❌ [Supabase Client] ERROR: Using template URL! Please update .env.local with your actual Supabase URL'
     )
   }
