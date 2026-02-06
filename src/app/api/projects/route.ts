@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient, createSupabaseAdminClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 import { z } from 'zod'
 
 const createProjectSchema = z.object({
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Fetch projects error:', error)
+      logger.error('Fetch projects error:', error)
       return NextResponse.json(
         { error: error.message },
         { status: 500 }
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ projects })
   } catch (error) {
-    console.error('GET /api/projects error:', error)
+    logger.error('GET /api/projects error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -76,15 +77,15 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request body
     const body = await request.json()
-    console.log('[POST /api/projects] Request body:', body)
+    logger.log('[POST /api/projects] Request body:', body)
 
     const validatedData = createProjectSchema.parse(body)
-    console.log('[POST /api/projects] Validated data:', validatedData)
+    logger.log('[POST /api/projects] Validated data:', validatedData)
 
     // Call PostgreSQL function directly to provision project
     const adminSupabase = await createSupabaseAdminClient()
 
-    console.log('[POST /api/projects] Calling provision_new_project with:', {
+    logger.log('[POST /api/projects] Calling provision_new_project with:', {
       p_project_id: validatedData.id,
       p_project_name: validatedData.name,
       p_template_id: validatedData.template_id,
@@ -101,10 +102,10 @@ export async function POST(request: NextRequest) {
       } as any
     )
 
-    console.log('[POST /api/projects] Function result:', { functionResult, functionError })
+    logger.log('[POST /api/projects] Function result:', { functionResult, functionError })
 
     if (functionError || !functionResult || !(functionResult as any)[0]?.success) {
-      console.error('[POST /api/projects] Provisioning failed:', {
+      logger.error('[POST /api/projects] Provisioning failed:', {
         error: functionError,
         result: functionResult,
       })
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (fetchError) {
-      console.error('Fetch created project error:', fetchError)
+      logger.error('Fetch created project error:', fetchError)
       return NextResponse.json(
         { error: 'Project created but failed to retrieve' },
         { status: 500 }
@@ -137,14 +138,14 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('[POST /api/projects] Validation error:', (error as z.ZodError).issues)
+      logger.error('[POST /api/projects] Validation error:', (error as z.ZodError).issues)
       return NextResponse.json(
         { error: 'Invalid input', details: (error as z.ZodError).issues },
         { status: 400 }
       )
     }
 
-    console.error('[POST /api/projects] Unexpected error:', error)
+    logger.error('[POST /api/projects] Unexpected error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
